@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "794142237576",
+    "firebase_url": "https://handy-sensor-136618.firebaseio.com",
+    "project_id": "handy-sensor-136618",
+    "storage_bucket": "handy-sensor-136618.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:794142237576:android:868f68f122e6d107",
+        "android_client_info": {
+          "package_name": "com.example.khumalo.firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "794142237576-sgur9ctip3ce8e63j836ctfpnni6vui3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkiu0SlA1XKeSyB1OuB7s8prwq66X3CoE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
