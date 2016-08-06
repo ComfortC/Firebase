@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/first_Button"
-            android:text="Button 1"
+            android:text="Enter Your Message"
             android:layout_weight="1"
             android:textAlignment="center"
             android:textSize="20dp"
@@ -36,16 +36,7 @@
             android:layout_margin="5dp"
            android:onClick="WriteToDatabase"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/Second_Button"
-            android:text="Button 2"
-            android:background="#c6bcbc"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textSize="20dp"
-            android:layout_margin="5dp" />
+
     </LinearLayout>
 
 
