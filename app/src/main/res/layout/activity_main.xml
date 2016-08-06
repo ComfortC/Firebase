@@ -33,7 +33,8 @@
             android:textAlignment="center"
             android:textSize="20dp"
             android:background="#c6bcbc"
-            android:layout_margin="5dp" />
+            android:layout_margin="5dp"
+           android:onClick="WriteToDatabase"/>
 
         <Button
             android:layout_width="wrap_content"
