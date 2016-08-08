@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.khumalo.firebase.Model.ShoppingList;
 import com.example.khumalo.firebase.R;
 import com.example.khumalo.firebase.utils.Constants;
 import com.firebase.client.DataSnapshot;
@@ -25,7 +26,7 @@ import com.firebase.client.ValueEventListener;
  */
 public class ShoppingListsFragment extends Fragment {
     private ListView mListView;
-    private TextView mTextViewListName;
+    private TextView mTextViewListName, mTextViewListOwner;
     public ShoppingListsFragment() {
         /* Required empty public constructor */
     }
@@ -67,7 +68,7 @@ public class ShoppingListsFragment extends Fragment {
         initializeScreen(rootView);
 
 
-        Firebase refListName = new Firebase(Constants.FIREBASE_URL).child(Constants.FIREBASE_PROPERTY_LIST_NAME);
+        Firebase refListName = new Firebase(Constants.FIREBASE_URL).child("activeList");
 
         /**
          * Add ValueEventListeners to Firebase references
@@ -79,10 +80,13 @@ public class ShoppingListsFragment extends Fragment {
                 // You can get the text using getValue. Since the DataSnapshot is of the exact
                 // data you asked for (the node listName), when you use getValue you know it
                 // will return a String.
-                String listName = (String) dataSnapshot.getValue();
+                ShoppingList listName =  dataSnapshot.getValue(ShoppingList.class);
                 // Now take the TextView for the list name
                 // and set it's value to listName.
-                mTextViewListName.setText(listName);
+                if (listName!=null) {
+                    mTextViewListName.setText(listName.getListName());
+                    mTextViewListOwner.setText(listName.getOwner());
+                }
             }
 
             @Override
@@ -115,5 +119,6 @@ public class ShoppingListsFragment extends Fragment {
     private void initializeScreen(View rootView) {
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
         mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
+        mTextViewListOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
     }
 }
