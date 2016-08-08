@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.khumalo.firebase.R;
+import com.example.khumalo.firebase.utils.Constants;
+import com.firebase.client.Firebase;
 
 
 /**
@@ -90,7 +92,9 @@ public class AddListDialogFragment extends DialogFragment {
      * Add new active list
      */
     public void addShoppingList() {
-
+        Firebase ref = new Firebase(Constants.FIREBASE_URL);
+        String userEnteredName = mEditTextListName.getText().toString();
+        ref.child(Constants.FIREBASE_PROPERTY_LIST_NAME).setValue(userEnteredName);
     }
 
 }

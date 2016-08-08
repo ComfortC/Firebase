@@ -17,9 +17,10 @@ public final class Constants {
 
 
     /**
-     * Constants for Firebase URL
+     * Constants for Firebase URL https://handy-sensor-136618.firebaseio.com/
      */
-
+    public static final String FIREBASE_URL = "https://handy-sensor-136618.firebaseio.com/";
+    public static final String FIREBASE_PROPERTY_LIST_NAME = "listName";
 
     /**
      * Constants for bundles, extras and shared preferences keys
