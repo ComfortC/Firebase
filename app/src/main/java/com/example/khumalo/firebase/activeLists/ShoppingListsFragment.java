@@ -8,8 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.khumalo.firebase.R;
+import com.example.khumalo.firebase.utils.Constants;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 
 /**
@@ -19,7 +25,7 @@ import com.example.khumalo.firebase.R;
  */
 public class ShoppingListsFragment extends Fragment {
     private ListView mListView;
-
+    private TextView mTextViewListName;
     public ShoppingListsFragment() {
         /* Required empty public constructor */
     }
@@ -60,6 +66,30 @@ public class ShoppingListsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
         initializeScreen(rootView);
 
+
+        Firebase refListName = new Firebase(Constants.FIREBASE_URL).child(Constants.FIREBASE_PROPERTY_LIST_NAME);
+
+        /**
+         * Add ValueEventListeners to Firebase references
+         * to control get data and control behavior and visibility of elements
+         */
+        refListName.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // You can get the text using getValue. Since the DataSnapshot is of the exact
+                // data you asked for (the node listName), when you use getValue you know it
+                // will return a String.
+                String listName = (String) dataSnapshot.getValue();
+                // Now take the TextView for the list name
+                // and set it's value to listName.
+                mTextViewListName.setText(listName);
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
         /**
          * Set interactive bits, such as click events and adapters
          */
@@ -84,5 +114,6 @@ public class ShoppingListsFragment extends Fragment {
      */
     private void initializeScreen(View rootView) {
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
+        mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
     }
 }
