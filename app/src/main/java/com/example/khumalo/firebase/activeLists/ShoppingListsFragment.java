@@ -31,8 +31,9 @@ import java.util.Date;
  */
 public class ShoppingListsFragment extends Fragment {
     private ListView mListView;
-    private TextView mTextViewListName, mTextViewListOwner;
-    private TextView mTextViewEditTime;
+    private ActiveListAdapter mActiveListAdapter;
+
+
     public ShoppingListsFragment() {
         /* Required empty public constructor */
     }
@@ -46,12 +47,6 @@ public class ShoppingListsFragment extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
-    }
-    
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     /**
@@ -68,45 +63,29 @@ public class ShoppingListsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         /**
-         * Initalize UI elements
+         * Initialize UI elements
          */
         View rootView = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
         initializeScreen(rootView);
 
-
-        Firebase refListName = new Firebase(Constants.FIREBASE_URL).child("activeList");
+        /**
+         * Create Firebase references
+         */
+        Firebase activeListsRef = new Firebase(Constants.FIREBASE_URL_ACTIVE_LISTS);
 
         /**
          * Add ValueEventListeners to Firebase references
          * to control get data and control behavior and visibility of elements
          */
-        refListName.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // You can get the text using getValue. Since the DataSnapshot is of the exact
-                // data you asked for (the node listName), when you use getValue you know it
-                // will return a String.
-                ShoppingList listName =  dataSnapshot.getValue(ShoppingList.class);
-                // Now take the TextView for the list name
-                // and set it's value to listName.
-                if (listName!=null) {
-                    mTextViewListName.setText(listName.getListName());
-                    mTextViewListOwner.setText(listName.getOwner());
-                    if (listName.getTimestampLastChanged() != null) {
-                        mTextViewEditTime.setText(
-                                Utils.SIMPLE_DATE_FORMAT.format(
-                                        new Date(listName.getTimestampLastChangedLong())));
-                    } else {
-                        mTextViewEditTime.setText("");
-                    }
-                }
-            }
+        mActiveListAdapter = new ActiveListAdapter(getActivity(), ShoppingList.class,
+                R.layout.single_active_list, activeListsRef);
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+        /**
+         * Set the adapter to the mListView
+         */
+        mListView.setAdapter(mActiveListAdapter);
 
-            }
-        });
+
         /**
          * Set interactive bits, such as click events and adapters
          */
@@ -117,31 +96,23 @@ public class ShoppingListsFragment extends Fragment {
             }
         });
 
-        mTextViewListName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /* Starts an active showing the details for the selected list */
-                Intent intent = new Intent(getActivity(), ActiveListDetailsActivity.class);
-                startActivity(intent);
-            }
-        });
-
         return rootView;
     }
 
+    /**
+     * Cleanup the adapter when activity is destroyed.
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mActiveListAdapter.cleanup();
     }
 
 
     /**
-     * Link layout elements from XML
+     * Link list view from XML
      */
     private void initializeScreen(View rootView) {
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
-        mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
-        mTextViewListOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
-        mTextViewEditTime = (TextView) rootView.findViewById(R.id.text_view_edit_time);
     }
 }
