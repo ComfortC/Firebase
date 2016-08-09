@@ -1,6 +1,7 @@
 package com.example.khumalo.firebase.activeLists;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.khumalo.firebase.Model.ShoppingList;
 import com.example.khumalo.firebase.R;
+import com.example.khumalo.firebase.activeListDetails.ActiveListDetailsActivity;
 import com.example.khumalo.firebase.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -101,6 +103,15 @@ public class ShoppingListsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+            }
+        });
+
+        mTextViewListName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /* Starts an active showing the details for the selected list */
+                Intent intent = new Intent(getActivity(), ActiveListDetailsActivity.class);
+                startActivity(intent);
             }
         });
 
