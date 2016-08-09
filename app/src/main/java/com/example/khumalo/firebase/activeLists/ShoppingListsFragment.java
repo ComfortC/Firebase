@@ -15,10 +15,13 @@ import com.example.khumalo.firebase.Model.ShoppingList;
 import com.example.khumalo.firebase.R;
 import com.example.khumalo.firebase.activeListDetails.ActiveListDetailsActivity;
 import com.example.khumalo.firebase.utils.Constants;
+import com.example.khumalo.firebase.utils.Utils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+
+import java.util.Date;
 
 
 /**
@@ -29,6 +32,7 @@ import com.firebase.client.ValueEventListener;
 public class ShoppingListsFragment extends Fragment {
     private ListView mListView;
     private TextView mTextViewListName, mTextViewListOwner;
+    private TextView mTextViewEditTime;
     public ShoppingListsFragment() {
         /* Required empty public constructor */
     }
@@ -88,6 +92,13 @@ public class ShoppingListsFragment extends Fragment {
                 if (listName!=null) {
                     mTextViewListName.setText(listName.getListName());
                     mTextViewListOwner.setText(listName.getOwner());
+                    if (listName.getTimestampLastChanged() != null) {
+                        mTextViewEditTime.setText(
+                                Utils.SIMPLE_DATE_FORMAT.format(
+                                        new Date(listName.getTimestampLastChangedLong())));
+                    } else {
+                        mTextViewEditTime.setText("");
+                    }
                 }
             }
 
@@ -131,5 +142,6 @@ public class ShoppingListsFragment extends Fragment {
         mListView = (ListView) rootView.findViewById(R.id.list_view_active_lists);
         mTextViewListName = (TextView) rootView.findViewById(R.id.text_view_list_name);
         mTextViewListOwner = (TextView) rootView.findViewById(R.id.text_view_created_by_user);
+        mTextViewEditTime = (TextView) rootView.findViewById(R.id.text_view_edit_time);
     }
 }
