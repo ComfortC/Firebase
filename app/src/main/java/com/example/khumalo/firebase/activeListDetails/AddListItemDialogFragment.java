@@ -5,6 +5,11 @@ import android.os.Bundle;
 
 import com.example.khumalo.firebase.Model.ShoppingList;
 import com.example.khumalo.firebase.R;
+import com.example.khumalo.firebase.utils.Constants;
+import com.firebase.client.Firebase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -45,6 +50,11 @@ public class AddListItemDialogFragment extends EditListDialogFragment {
      */
     @Override
     protected void doListEdit() {
-
+        Firebase ref = new Firebase(Constants.FIREBASE_URL_ACTIVE_LIST_ITEMS).child(mListId);
+        Firebase postRef = ref.push();
+        Map<String, String> post1 = new HashMap<String, String>();
+        post1.put("author", "gracehop");
+        post1.put("title", "Announcing COBOL, a New Programming Language");
+        postRef.setValue(post1);
     }
 }
