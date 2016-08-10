@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import com.example.khumalo.firebase.BaseActivity;
 import com.example.khumalo.firebase.Model.ShoppingList;
+import com.example.khumalo.firebase.Model.ShoppingListItem;
 import com.example.khumalo.firebase.R;
 import com.example.khumalo.firebase.utils.Constants;
 import com.firebase.client.DataSnapshot;
@@ -30,7 +31,8 @@ public class ActiveListDetailsActivity extends BaseActivity {
     private ListView mListView;
     private ShoppingList mShoppingList;
     private String mListId;
-
+    private ActiveListItemAdapter mActiveListItemAdapter;
+    private ValueEventListener mActiveListRefListener;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -50,18 +52,23 @@ public class ActiveListDetailsActivity extends BaseActivity {
          * Create Firebase references
          */
         mActiveListRef = new Firebase(Constants.FIREBASE_URL_ACTIVE_LISTS).child(mListId);
-
+        Firebase listItemsRef = new Firebase(Constants.FIREBASE_URL_SHOPPING_LIST_ITEMS).child(mListId);
 
         /**
          * Link layout elements from XML and setup the toolbar
          */
         initializeScreen();
 
+        mActiveListItemAdapter = new ActiveListItemAdapter(this, ShoppingListItem.class,R.layout.single_active_list_item, listItemsRef);
+        /* Create ActiveListItemAdapter and set to listView */
+        mListView.setAdapter(mActiveListItemAdapter);
+
         /**
          * Save the most recent version of current shopping list into mShoppingList instance
          * variable an update the UI to match the current list.
+         * variable an update the UI to match the current list.
          */
-        mActiveListRef.addValueEventListener(new ValueEventListener() {
+        mActiveListRefListener=mActiveListRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
 
@@ -177,13 +184,17 @@ public class ActiveListDetailsActivity extends BaseActivity {
     }
 
 
+
     /**
      * Cleanup when the activity is destroyed.
      */
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mActiveListItemAdapter.cleanup();
+        mActiveListRef.removeEventListener(mActiveListRefListener);
     }
+
 
     /**
      * Link layout elements from XML and setup the toolbar

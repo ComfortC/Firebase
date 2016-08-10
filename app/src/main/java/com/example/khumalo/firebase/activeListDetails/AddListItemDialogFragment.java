@@ -4,9 +4,12 @@ import android.app.Dialog;
 import android.os.Bundle;
 
 import com.example.khumalo.firebase.Model.ShoppingList;
+import com.example.khumalo.firebase.Model.ShoppingListItem;
 import com.example.khumalo.firebase.R;
 import com.example.khumalo.firebase.utils.Constants;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.Firebase;
+import com.firebase.client.ServerValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,11 +53,46 @@ public class AddListItemDialogFragment extends EditListDialogFragment {
      */
     @Override
     protected void doListEdit() {
-        Firebase ref = new Firebase(Constants.FIREBASE_URL_ACTIVE_LIST_ITEMS).child(mListId);
-        Firebase postRef = ref.push();
-        Map<String, String> post1 = new HashMap<String, String>();
-        post1.put("author", "gracehop");
-        post1.put("title", "Announcing COBOL, a New Programming Language");
-        postRef.setValue(post1);
+        String mItemName = mEditTextForList.getText().toString();
+        /**
+         * Adds list item if the input name is not empty
+         */
+        if (!mItemName.equals("")) {
+
+            Firebase firebaseRef = new Firebase(Constants.FIREBASE_URL);
+            Firebase itemsRef = new Firebase(Constants.FIREBASE_URL_SHOPPING_LIST_ITEMS).child(mListId);
+
+            /* Make a map for the item you are adding */
+            HashMap<String, Object> updatedItemToAddMap = new HashMap<String, Object>();
+
+            /* Save push() to maintain same random Id */
+            Firebase newRef = itemsRef.push();
+            String itemId = newRef.getKey();
+
+            /* Make a POJO for the item and immediately turn it into a HashMap */
+            ShoppingListItem itemToAddObject = new ShoppingListItem(mItemName);
+            HashMap<String, Object> itemToAdd =
+                    (HashMap<String, Object>) new ObjectMapper().convertValue(itemToAddObject, Map.class);
+
+            /* Add the item to the update map*/
+            updatedItemToAddMap.put("/" + Constants.FIREBASE_LOCATION_SHOPPING_LIST_ITEMS + "/"
+                    + mListId + "/" + itemId, itemToAdd);
+
+            /* Make the timestamp for last changed */
+            HashMap<String, Object> changedTimestampMap = new HashMap<>();
+            changedTimestampMap.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
+
+            /* Add the updated timestamp */
+            updatedItemToAddMap.put("/" + Constants.FIREBASE_LOCATION_ACTIVE_LISTS +
+                    "/" + mListId + "/" + Constants.FIREBASE_PROPERTY_TIMESTAMP_LAST_CHANGED, changedTimestampMap);
+
+            /* Do the update */
+            firebaseRef.updateChildren(updatedItemToAddMap);
+
+            /**
+             * Close the dialog fragment when done
+             */
+            AddListItemDialogFragment.this.getDialog().cancel();
+        }
     }
 }
