@@ -28,7 +28,7 @@ public class ShoppingList {
         this.timestampCreated = timestampCreated;
         HashMap<String, Object> timestampNowObject = new HashMap<String, Object>();
         timestampNowObject.put(Constants.FIREBASE_PROPERTY_TIMESTAMP, ServerValue.TIMESTAMP);
-        this.timestampLastChanged = timestampNowObject;;
+        this.timestampLastChanged = timestampNowObject;
 
     }
 

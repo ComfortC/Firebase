@@ -8,6 +8,8 @@ import android.support.v7.app.AlertDialog;
 
 import com.example.khumalo.firebase.Model.ShoppingList;
 import com.example.khumalo.firebase.R;
+import com.example.khumalo.firebase.utils.Constants;
+import com.firebase.client.Firebase;
 
 
 /**
@@ -15,13 +17,14 @@ import com.example.khumalo.firebase.R;
  */
 public class RemoveListDialogFragment extends DialogFragment {
     final static String LOG_TAG = RemoveListDialogFragment.class.getSimpleName();
-
+    String mListId;
     /**
      * Public static constructor that creates fragment and passes a bundle with data into it when adapter is created
      */
-    public static RemoveListDialogFragment newInstance(ShoppingList shoppingList) {
+    public static RemoveListDialogFragment newInstance(ShoppingList shoppingList, String listId) {
         RemoveListDialogFragment removeListDialogFragment = new RemoveListDialogFragment();
         Bundle bundle = new Bundle();
+        bundle.putString(Constants.KEY_LIST_ID, listId);
         removeListDialogFragment.setArguments(bundle);
         return removeListDialogFragment;
     }
@@ -32,6 +35,7 @@ public class RemoveListDialogFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mListId = getArguments().getString(Constants.KEY_LIST_ID);
     }
 
     @Override
@@ -58,7 +62,8 @@ public class RemoveListDialogFragment extends DialogFragment {
     }
 
     private void removeList() {
-
+        Firebase ref = new Firebase(Constants.FIREBASE_URL_ACTIVE_LISTS).child(mListId);
+        ref.removeValue();
     }
 
 }
