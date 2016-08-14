@@ -1,5 +1,6 @@
 package com.example.khumalo.firebase.Login;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +38,7 @@ public class LoginActivity extends BaseActivity {
     public static final int RC_GOOGLE_LOGIN = 1;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-
+    private ProgressDialog mAuthProgressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,7 @@ public class LoginActivity extends BaseActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                mAuthProgressDialog.dismiss();
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -83,6 +86,13 @@ public class LoginActivity extends BaseActivity {
                 // [END_EXCLUDE]
             }
         };
+        LinearLayout linearLayoutLoginActivity = (LinearLayout) findViewById(R.id.linear_layout_login_activity);
+        initializeBackground(linearLayoutLoginActivity);
+        /* Setup the progress dialog that is displayed later when authenticating with Firebase */
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle(getString(R.string.progress_dialog_loading));
+        mAuthProgressDialog.setMessage(getString(R.string.progress_dialog_authenticating_with_firebase));
+        mAuthProgressDialog.setCancelable(false);
 
         setupGoogleSignIn();
     }
@@ -118,7 +128,7 @@ public class LoginActivity extends BaseActivity {
     public void onSignInGooglePressed(View view) {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_GOOGLE_LOGIN);
-
+        mAuthProgressDialog.show();
     }
 
 
@@ -138,6 +148,7 @@ public class LoginActivity extends BaseActivity {
                 // [START_EXCLUDE]
                 Log.d("Tag", "Sign in failed "+ result.getStatus());
                 // [END_EXCLUDE]
+                mAuthProgressDialog.dismiss();
             }
         }
     }
@@ -163,6 +174,7 @@ public class LoginActivity extends BaseActivity {
                             Log.w("Tag", "signInWithCredential", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                            mAuthProgressDialog.dismiss();
                         }
                         // [START_EXCLUDE]
 
