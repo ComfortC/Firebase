@@ -38,8 +38,6 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
 
-        setContentView(R.layout.activity_login);
-
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.web_client_id_2))
@@ -67,6 +65,7 @@ public class LoginActivity extends BaseActivity {
                     // User is signed in
                     Log.d("Tag", "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
+                    setContentView(R.layout.activity_login);
                     setupGoogleSignIn();
                     // User is signed out
                     Log.d("Tag", "onAuthStateChanged:signed_out");
