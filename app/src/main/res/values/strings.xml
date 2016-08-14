@@ -24,7 +24,8 @@
     <string name="action_remove_list">Remove list</string>
     <string name="action_archive">Archive</string>
 
-
+    <string name="web_client_id_2">794142237576-sgur9ctip3ce8e63j836ctfpnni6vui3.apps.googleusercontent.com</string>
+ <string name="web_client_id">794142237576-076buv2lten894gbjde8197hk5fmrckq.apps.googleusercontent.com</string>
     <!--
 
     == Active List Strings ==

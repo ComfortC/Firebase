@@ -18,6 +18,9 @@ import com.example.khumalo.firebase.R;
 import com.example.khumalo.firebase.utils.Constants;
 import com.firebase.client.Firebase;
 import com.firebase.client.ServerValue;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserInfo;
 
 import java.util.HashMap;
 
@@ -99,7 +102,18 @@ public class AddListDialogFragment extends DialogFragment {
         // Get the string that the user entered into the EditText and make an object with it
         // We'll use "Anonymous Owner" for the owner because we don't have user accounts yet
         String userEnteredName = mEditTextListName.getText().toString();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String owner = "Anonymous Owner";
+        if (user != null) {
+            for (UserInfo profile : user.getProviderData()) {
+                // Id of the provider (ex: google.com)
+
+
+                // Name, email address, and profile photo Url
+              owner = profile.getDisplayName();
+
+            };
+        }
 
         /**
          * If EditText input is not empty
