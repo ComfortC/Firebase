@@ -1,7 +1,10 @@
 package com.example.khumalo.firebase;
 
 import android.app.DialogFragment;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,10 +16,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.khumalo.firebase.Login.LoginActivity;
 import com.example.khumalo.firebase.activeLists.AddListDialogFragment;
 import com.example.khumalo.firebase.activeLists.ShoppingListsFragment;
 import com.example.khumalo.firebase.meals.AddMealDialogFragment;
 import com.example.khumalo.firebase.meals.MealsFragment;
+import com.example.khumalo.firebase.utils.Constants;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -29,12 +34,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if(sp.getBoolean(Constants.isLoggedIn,false)){
 
-        /**
-         * Link layout elements from XML and setup the toolbar
-         */
-        initializeScreen();
+            setContentView(R.layout.activity_main);
+
+            /**
+             * Link layout elements from XML and setup the toolbar
+             */
+            initializeScreen();
+
+        }else {
+
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+        }
+
+
     }
 
 

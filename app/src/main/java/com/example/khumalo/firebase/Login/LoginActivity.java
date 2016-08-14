@@ -1,6 +1,8 @@
 package com.example.khumalo.firebase.Login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 import com.example.khumalo.firebase.BaseActivity;
 import com.example.khumalo.firebase.MainActivity;
 import com.example.khumalo.firebase.R;
+import com.example.khumalo.firebase.utils.Constants;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -33,10 +36,11 @@ public class LoginActivity extends BaseActivity {
     public static final int RC_GOOGLE_LOGIN = 1;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setContentView(R.layout.activity_login);
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -57,6 +61,10 @@ public class LoginActivity extends BaseActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putBoolean(Constants.isLoggedIn,true);
+                    editor.commit();
 
                     Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -65,8 +73,8 @@ public class LoginActivity extends BaseActivity {
                     // User is signed in
                     Log.d("Tag", "onAuthStateChanged:signed_in:" + user.getUid());
                 } else {
-                    setContentView(R.layout.activity_login);
-                    setupGoogleSignIn();
+
+
                     // User is signed out
                     Log.d("Tag", "onAuthStateChanged:signed_out");
                 }
@@ -76,7 +84,7 @@ public class LoginActivity extends BaseActivity {
             }
         };
 
-
+        setupGoogleSignIn();
     }
 
     @Override
